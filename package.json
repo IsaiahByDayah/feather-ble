@@ -1,0 +1,29 @@
+{
+  "name": "feather-ble",
+  "version": "1.0.1",
+  "description": "A Node.js module to connect and communicate with the Adafruit Feather 32u4 Bluefruit LE Arduino micro controller (and other compatible controllers)",
+  "main": "feather.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jordankid93/feather-ble.git"
+  },
+  "keywords": [
+    "Adafruit",
+    "32u4",
+    "Bluefruit",
+    "LE",
+    "BLE"
+  ],
+  "author": "Isaiah Smith (jordankid93)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jordankid93/feather-ble/issues"
+  },
+  "homepage": "https://github.com/jordankid93/feather-ble#readme",
+  "dependencies": {
+    "underscore": "^1.8.3"
+  }
+}

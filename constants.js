@@ -14,6 +14,9 @@ module.exports = {
 
 	// UUID for UART service
 	// NOTE: Not sure if this is unique or not per device
-	UART_SERVICE_UUID: "6e400001b5a3f393e0a9e50e24dcca9e"
+	UART_SERVICE_UUID: "6e400001b5a3f393e0a9e50e24dcca9e",
+
+	// Flag for if feathers should be started in verbose mode
+	REQUEST_RSSI_UPDATE_RATE: 5000,
 
 };

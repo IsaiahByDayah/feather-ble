@@ -1,7 +1,7 @@
 var CONSTANTS = require('./constants.js');
 var _ = require('underscore');
 
-var Feather = function(peripheral, verbose){
+var Feather = function(settings){
 
 	/*
 		VARIABLES
@@ -10,10 +10,16 @@ var Feather = function(peripheral, verbose){
 	var _self = this;
 
 	// Should console.logs be printed out
-	this._verbose = verbose;
+	this._verbose = (settings && settings.verbose) || false;
+
+	// Should request and trigger RSSI update notices
+	this._requestRSSI = (settings && settings.rssi) || false;
+
+	// Rate at which RSSI should be updated
+	this._requestRSSIRate = (settings && settings.rssi_update_rate) || CONSTANTS.REQUEST_RSSI_UPDATE_RATE;
 
 	// Noble Peripheral Object
-	this._peripheral = peripheral;
+	this._peripheral = (settings && settings.peripheral) || null;
 
 	// Incoming Characteristic
 	this._read;
@@ -81,8 +87,6 @@ var Feather = function(peripheral, verbose){
 				});
 
 			});
-
-			// MARK: Add update RSSI code
 
 			_self._peripheral.discoverServices([CONSTANTS.UART_SERVICE_UUID], function(err, services){
 
@@ -171,6 +175,19 @@ var Feather = function(peripheral, verbose){
 			}
 
 			if (_self._read != null && _self._write != null) {
+
+				// MARK: Request for RSSI Updates if applicable
+				if (_self._requestRSSI) {
+
+					var requestRssiUpdates = setInterval(function(){
+						_self._peripheral.updateRssi(function(err, rssi){
+							// Trigger RSSI callbacks
+							_.each(_self._listeners.rssi, function(callback){
+								callback(err, rssi);
+							});
+						});
+					}, _self._requestRSSIRate);
+				}
 
 				_self._ready = true;
 
@@ -280,6 +297,10 @@ var Feather = function(peripheral, verbose){
 				_self._inputBuffer += c;
 			}
 		}
+	};
+
+	this.disconnect = function(){
+		_self._peripheral.disconnect();
 	};
 
 	this.isFeather = function(peripheral){

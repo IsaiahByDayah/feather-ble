@@ -32,14 +32,17 @@ var Feather = function(peripheral, verbose){
 
 	// Listener Event callbacks
 	this._listeners = {
-		// When wearable is connected and ready
+		// When feather is connected and ready
 		"ready": [],
 
-		// When a user disconnects
+		// When feather disconnects
 		"disconnect": [],
 
-		// When the wearable sends any message back
-		"message": []
+		// When the feather sends any message back
+		"message": [],
+
+		// When the RSSI updates
+		"rssi": []
 	};
 
 
@@ -78,6 +81,8 @@ var Feather = function(peripheral, verbose){
 				});
 
 			});
+
+			// MARK: Add update RSSI code
 
 			_self._peripheral.discoverServices([CONSTANTS.UART_SERVICE_UUID], function(err, services){
 

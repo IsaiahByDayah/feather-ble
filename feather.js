@@ -18,6 +18,12 @@ var Feather = function(settings){
 	// Rate at which RSSI should be updated
 	this._requestRSSIRate = (settings && settings.rssi_update_rate) || CONSTANTS.REQUEST_RSSI_UPDATE_RATE;
 
+	// Reference to the requestRSSIInterval
+	this._requestRSSIInterval;
+
+	// Pause flag for the requestRSSIInterval
+	this._requestRSSIIntervalisPause = false;
+
 	// Noble Peripheral Object
 	this._peripheral = (settings && settings.peripheral) || null;
 
@@ -169,6 +175,7 @@ var Feather = function(settings){
 		function checkSetupStatus(err){
 
 			if (err) {
+				// NOTE: Trigger Ready callbacks
 				_.each(_self._listeners.ready, function(callback){
 					callback(err);
 				});
@@ -179,13 +186,23 @@ var Feather = function(settings){
 				// MARK: Request for RSSI Updates if applicable
 				if (_self._requestRSSI) {
 
-					var requestRssiUpdates = setInterval(function(){
-						_self._peripheral.updateRssi(function(err, rssi){
-							// Trigger RSSI callbacks
-							_.each(_self._listeners.rssi, function(callback){
-								callback(err, rssi);
+					_self._requestRSSIInterval = setInterval(function(){
+						// NOTE: check if interval is paused
+						if (!_self._requestRSSIIntervalisPause) {
+							// NOTE: Pause interval
+							_self._requestRSSIIntervalisPause = true;
+
+							// request new rssi
+							_self._peripheral.updateRssi(function(err, rssi){
+								// Trigger RSSI callbacks
+								_.each(_self._listeners.rssi, function(callback){
+									callback(err, rssi);
+								});
+
+								// NOTE: Unpause interval
+								_self._requestRSSIIntervalisPause = true;
 							});
-						});
+						}
 					}, _self._requestRSSIRate);
 				}
 

@@ -1,6 +1,6 @@
 {
   "name": "feather-ble",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A Node.js module to connect and communicate with the Adafruit Feather 32u4 Bluefruit LE Arduino micro controller (and other compatible controllers)",
   "main": "feather.js",
   "scripts": {

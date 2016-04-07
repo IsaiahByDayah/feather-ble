@@ -187,8 +187,9 @@ var Feather = function(settings){
 				if (_self._requestRSSI) {
 
 					_self._requestRSSIInterval = setInterval(function(){
-						// NOTE: check if interval is paused
+						// NOTE: if interval is not paused
 						if (!_self._requestRSSIIntervalisPause) {
+
 							// NOTE: Pause interval
 							_self._requestRSSIIntervalisPause = true;
 
@@ -200,7 +201,7 @@ var Feather = function(settings){
 								});
 
 								// NOTE: Unpause interval
-								_self._requestRSSIIntervalisPause = true;
+								_self._requestRSSIIntervalisPause = false;
 							});
 						}
 					}, _self._requestRSSIRate);

@@ -234,6 +234,11 @@ var Feather = function(settings){
 	// Send a message (String) to this wearable with a callback on completion
 	this.sendMessage = function(msg, callback){
 
+		if (! _self._connected) {
+			// Dont try to send messages if not connected
+			return;
+		}
+
 		if (msg[msg.length] != CONSTANTS.MESSAGE_TERMINATOR) msg += CONSTANTS.MESSAGE_TERMINATOR;
 
 		var messages = chunkString(msg, CONSTANTS.BLE_MAX_CHUNK_SIZE);

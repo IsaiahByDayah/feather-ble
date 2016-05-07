@@ -196,6 +196,8 @@ var Feather = function(settings){
 					_self._requestRSSIInterval = setInterval(function(){
 						// NOTE: if interval is not paused
 						if (!_self._connected) {
+							clearInterval(_self._requestRSSIInterval);
+
 							_.each(_self._listeners.rssi, function(callback){
 								var err = new Error("No longer connected to anything...");
 								callback(err, -1000);
@@ -209,6 +211,11 @@ var Feather = function(settings){
 
 							// request new rssi
 							_self._peripheral.updateRssi(function(err, rssi){
+								if (!_self._connected) {
+									clearInterval(_self._requestRSSIInterval);
+									return;
+								}
+
 								// Trigger RSSI callbacks
 								_.each(_self._listeners.rssi, function(callback){
 									callback(err, rssi);

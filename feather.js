@@ -210,22 +210,7 @@ var Feather = function(settings){
 							_self._requestRSSIIntervalisPause = true;
 
 							// request new rssi
-							_self._peripheral.once('rssiUpdate', function(err, rssi){
-								if (!_self._connected) {
-									clearInterval(_self._requestRSSIInterval);
-									return;
-								}
-
-								// Trigger RSSI callbacks
-								_.each(_self._listeners.rssi, function(callback){
-									callback(err, rssi);
-								});
-
-								// NOTE: Unpause interval
-								_self._requestRSSIIntervalisPause = false;
-							});
-
-							// _self._peripheral.updateRssi(function(err, rssi){
+							// _self._peripheral.once('rssiUpdate', function(err, rssi){
 							// 	if (!_self._connected) {
 							// 		clearInterval(_self._requestRSSIInterval);
 							// 		return;
@@ -239,6 +224,21 @@ var Feather = function(settings){
 							// 	// NOTE: Unpause interval
 							// 	_self._requestRSSIIntervalisPause = false;
 							// });
+
+							_self._peripheral.updateRssi(function(err, rssi){
+								if (!_self._connected) {
+									clearInterval(_self._requestRSSIInterval);
+									return;
+								}
+
+								// Trigger RSSI callbacks
+								_.each(_self._listeners.rssi, function(callback){
+									callback(err, rssi);
+								});
+
+								// NOTE: Unpause interval
+								_self._requestRSSIIntervalisPause = false;
+							});
 						}
 					}, _self._requestRSSIRate);
 				}

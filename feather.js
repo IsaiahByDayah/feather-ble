@@ -42,6 +42,9 @@ var Feather = function(settings){
 	// If wearable is ready
 	this._ready = false;
 
+	// If this feather is connected
+	this._connected = false;
+
 	// Listener Event callbacks
 	this._listeners = {
 		// When feather is connected and ready
@@ -82,10 +85,14 @@ var Feather = function(settings){
 				console.log("\tConnected!\n\n");
 			}
 
+			_self._connected = true;
+
 			_self._peripheral.once('disconnect', function(){
 				if (_self._verbose){
 					console.log("\n\nPeripheral disconnected.");
 				}
+
+				_self._connected = false;
 
 				// Trigger disconnect callbacks
 				_.each(_self._listeners.disconnect, function(callback){
@@ -188,6 +195,13 @@ var Feather = function(settings){
 
 					_self._requestRSSIInterval = setInterval(function(){
 						// NOTE: if interval is not paused
+						if (!_self._connected) {
+							_.each(_self._listeners.rssi, function(callback){
+								var err = new Error("No longer connected to anything...");
+								callback(err, -1000);
+							});
+						}
+
 						if (!_self._requestRSSIIntervalisPause) {
 
 							// NOTE: Pause interval
@@ -318,6 +332,7 @@ var Feather = function(settings){
 	};
 
 	this.disconnect = function(){
+		_self._connected = false;
 		_self._peripheral.disconnect();
 	};
 

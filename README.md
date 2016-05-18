@@ -16,7 +16,7 @@
 ## Quick Start
 
 ### Install
-```
+```shell
 npm install --save feather-ble
 ```
 
